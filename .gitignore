@@ -1,0 +1,22 @@
+# Python environment
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Testing and cache
+.pytest_cache/
+
+# MLflow generated files
+mlruns/
+mlflow.db
+
+# Runtime logs
+logs/*
+!logs/.gitkeep
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# System files
+.DS_Store

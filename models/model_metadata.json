@@ -1,0 +1,13 @@
+{
+    "model_name": "KMeans Customer Segmentation",
+    "model_version": "1.0",
+    "algorithm": "KMeans",
+    "optimal_clusters": 5,
+    "features": [
+        "Income",
+        "SpendingScore"
+    ],
+    "silhouette_score": 0.5547,
+    "davies_bouldin_score": 0.5722,
+    "random_state": 42
+}
