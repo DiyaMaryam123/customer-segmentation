@@ -94,3 +94,21 @@ The K-Means model successfully groups customers into five segments using annual 
 The project demonstrates the complete workflow from data preprocessing and model evaluation to experiment tracking, API development, dashboard integration, containerization, monitoring, and automated testing.
 
 The resulting customer segments can help businesses understand different spending patterns and support targeted marketing strategies.
+
+## Monitoring and Maintenance
+
+The deployed API provides `/health` and `/metrics` endpoints to check service health, successful assignment counts, cluster assignment counts, and failed requests. Incoming customer feature distributions and cluster assignment proportions should be reviewed for changes from the training data.
+
+Retraining should be considered when representative new customer data becomes available or when meaningful changes in customer behaviour are observed. A retrained model should be evaluated using silhouette score and Davies-Bouldin score, and its cluster profiles should be reviewed against the existing model before deployment.
+
+## Cluster Label Consistency
+
+K-Means cluster numbers are arbitrary. Cluster IDs may change after retraining, even when the underlying customer segments are similar. New cluster centres should therefore be compared with the previous centres, and any mapping between old and new labels should be documented. Application profiles and descriptions must be updated when the mapping changes.
+
+## Limitations
+
+- The dataset contains 200 customer records and may not represent broader customer populations.
+- The model uses only Annual Income and Spending Score.
+- The resulting clusters describe patterns in the available data; they are not definitive customer classifications.
+- Cluster IDs do not have a permanent semantic meaning and may change after retraining.
+- The API rejects values outside its configured input ranges.

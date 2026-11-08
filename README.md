@@ -190,3 +190,28 @@ The current test run completed with five passing tests.
 This project demonstrates customer segmentation using unsupervised machine learning and an MLOps deployment workflow.
 
 The trained K-Means model identifies five customer groups based on annual income and spending score. The API and Streamlit dashboard make it possible to assign new customers to these segments.
+
+## Monitoring and Maintenance
+
+- Monitor API health, prediction failures, and cluster assignment counts using the `/health` and `/metrics` endpoints.
+- Review incoming Income and SpendingScore distributions and cluster assignment proportions for changes from the training data.
+- Investigate substantial distribution shifts or unusual changes in assignment counts before relying on predictions.
+- Retrain when new representative customer data becomes available or when meaningful changes in customer behaviour are observed.
+- After retraining, evaluate the new model using silhouette score and Davies-Bouldin score, review the cluster profiles, and compare results with the existing model.
+- Save and version the scaler, K-Means model, model parameters, evaluation results, and cluster profiles together.
+
+### Cluster Label Consistency
+
+K-Means cluster numbers are arbitrary and may change when the model is retrained. Do not assume that Cluster 0 or any other cluster number always represents the same customer segment. Compare the new cluster centres with the previous centres, document any label mapping, and update the cluster profiles and application descriptions when necessary.
+
+### Limitations
+
+- The project uses a small dataset of 200 customer records, so the segments may not represent all customer populations.
+- Clustering uses only Annual Income and Spending Score; other factors that may influence customer behaviour are not included.
+- Cluster assignments describe similarities in the available data and should not be treated as definitive customer classifications.
+- Cluster numbers do not have an inherent meaning and may change after retraining.
+- API input validation enforces the configured input ranges; values outside those ranges are rejected.
+
+### Reproducing Training and Evaluation
+
+Open `kmeans.ipynb` in Google Colab or a local Jupyter environment and run the notebook cells in order. The notebook contains the data exploration, preprocessing, K-Means training, cluster evaluation, and visualisation workflow. The saved model and scaler artifacts are in the `models/` directory.
