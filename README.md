@@ -11,6 +11,17 @@ The project also demonstrates an end-to-end MLOps workflow, including experiment
 ## 2. Dataset
 
 The project uses the Mall Customers dataset.
+### Dataset Source and Version
+
+- **Dataset name:** Mall Customers Dataset
+- **Source platform:** Kaggle
+- **Dataset type:** Customer demographic and spending data
+- **Records:** 200 customers
+- **Attributes:** CustomerID, Gender, Age, Annual Income, and Spending Score
+- **Version:** The specific Kaggle dataset version or upload date has not yet been recorded.
+- **Primary model features:** Annual Income and Spending Score.
+
+The dataset is used for exploratory data analysis, customer segmentation, and K-Means clustering. The primary model uses Annual Income and Spending Score after applying StandardScaler.
 
 Important attributes:
 - CustomerID
@@ -193,12 +204,32 @@ The trained K-Means model identifies five customer groups based on annual income
 
 ## Monitoring and Maintenance
 
-- Monitor API health, prediction failures, and cluster assignment counts using the `/health` and `/metrics` endpoints.
-- Review incoming Income and SpendingScore distributions and cluster assignment proportions for changes from the training data.
-- Investigate substantial distribution shifts or unusual changes in assignment counts before relying on predictions.
-- Retrain when new representative customer data becomes available or when meaningful changes in customer behaviour are observed.
-- After retraining, evaluate the new model using silhouette score and Davies-Bouldin score, review the cluster profiles, and compare results with the existing model.
-- Save and version the scaler, K-Means model, model parameters, evaluation results, and cluster profiles together.
+The deployed customer segmentation application uses FastAPI endpoints to monitor API health, prediction activity, and request failures.
+
+### API Monitoring
+
+- Use the `/health` endpoint to check API availability.
+- Use the `/metrics` endpoint to review successful prediction counts, cluster assignment counts, and failed requests.
+- Review API logs to investigate errors and unsuccessful requests.
+- Monitor input values to identify unusual changes in customer income and spending scores.
+
+### Model Monitoring
+
+- Review the distribution of customer assignments across the five clusters.
+- Compare new customer data distributions with the original training data.
+- Investigate substantial changes in cluster proportions or input distributions.
+- Evaluate whether the existing customer segments remain meaningful as new data becomes available.
+
+### Maintenance and Retraining
+
+- Retrain the model when sufficient representative customer data becomes available or meaningful changes in customer behaviour are observed.
+- Evaluate retrained models using Silhouette Score, Davies-Bouldin Score, and Calinski-Harabasz Score.
+- Compare new cluster centres and customer profiles with the existing model.
+- Preserve cluster-label consistency by documenting any changes in cluster numbering.
+- Version the model, scaler, metadata, evaluation results, and cluster profiles together.
+- Test the updated model before deploying it.
+
+The API's prediction counters are maintained in memory and reset when the API restarts. Log files provide additional information about API activity and failures.
 
 ### Cluster Label Consistency
 
@@ -214,4 +245,32 @@ K-Means cluster numbers are arbitrary and may change when the model is retrained
 
 ### Reproducing Training and Evaluation
 
-Open `kmeans.ipynb` in Google Colab or a local Jupyter environment and run the notebook cells in order. The notebook contains the data exploration, preprocessing, K-Means training, cluster evaluation, and visualisation workflow. The saved model and scaler artifacts are in the `models/` directory.
+The model training and evaluation workflow can be reproduced using the `kmeans.ipynb` notebook.
+
+1. Open `kmeans.ipynb` in Google Colab or a local Jupyter environment.
+2. Load the Mall Customers dataset.
+3. Run the notebook cells in order to perform data exploration, preprocessing, feature scaling, and K-Means clustering.
+4. Evaluate the clustering results using Silhouette Score, Davies-Bouldin Score, and Calinski-Harabasz Score.
+5. Review the cluster visualizations and customer profiles.
+6. Save the trained K-Means model and fitted StandardScaler.
+
+The current model uses five clusters, `random_state=42`, and `n_init=10`.
+
+#### Retraining and Cluster Label Consistency
+
+When new customer data becomes available, retrain the model using the same preprocessing steps and feature order:
+
+- Annual Income
+- Spending Score
+
+Evaluate the retrained model before replacing the existing model.
+
+K-Means cluster labels are arbitrary and may change between training runs. Therefore:
+
+- Compare the new cluster centres with the existing cluster centres.
+- Match clusters based on their customer profiles and centre similarities.
+- Document any changes in cluster numbering and segment descriptions.
+- Update the cluster profiles and application descriptions if the segment mapping changes.
+- Save and version the new model, scaler, metadata, evaluation metrics, and cluster profiles together.
+
+Do not replace the deployed model until the new model has been evaluated and its cluster labels have been checked for consistency.
